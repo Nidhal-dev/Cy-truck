@@ -18,3 +18,14 @@ Pour exécuter le script, utilisez la commande suivante :
 
 ```bash
 ./script.sh [OPTIONS] data.csv
+
+## Options disponibles
+-h ou -H: Affiche l'aide et la documentation.
+-d1 ou -D1: Effectue le traitement 1 et génère une visualisation.
+-d2 ou -D2: Effectue le traitement 2 et génère une visualisation.
+-l ou -L: Effectue le traitement "l" et génère une visualisation.
+-t ou -T: Compile et exécute le programme C "progt".
+-s ou -S: Compile et exécute le programme C "progs", avec des traitements spécifiques.
+Note : Assurez-vous de remplacer data.csv par le chemin vers votre fichier de données CSV.
+
+Remarque : Assurez-vous que les permissions d'exécution sont attribuées au script via la commande chmod +x script.sh avant de l'exécuter.
