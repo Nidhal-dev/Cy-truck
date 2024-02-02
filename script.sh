@@ -1,23 +1,45 @@
 #!/bin/bash
 
-echo -e "\n"
-
 # Vérifiez s'il y a au moins un argument
 if [ $# -eq 0 ]; then
-    echo "Aucun arguments"
+    echo -e "Aucun arguments\n"
     exit 1
 fi
 
 #vérifie si un traitement a été choisi
 if [ $# -eq 1 ]; then
-    echo "Choisissez un traitement"
+    echo -e "Choisissez un traitement\n"
     exit 1
+fi
+
+
+# Récupère le chemin passé en argument
+chemin=$1
+
+# Vérifie si le chemin existe
+if [ -e "$chemin" ]; then
+    # Vérifie si le chemin est un fichier
+    if [ -f "$chemin" ]; then
+        # Vérifie si le fichier s'appelle "data.csv"
+        if [ "$(basename "$chemin")" = "data.csv" ]; then
+            echo -e "Le chemin passé est valide et mène au fichier data.csv.\n"
+        else
+            echo -e "Le chemin existe mais ne mène pas au fichier data.csv.\n"
+            exit 0
+        fi
+    else
+        echo -e "Le chemin existe mais n'est pas un fichier.\n"
+        exit 0
+    fi
+else
+    echo -e "Le chemin n'existe pas.\n"
+    exit 0
 fi
 
 # Vérifiez si l'option d'aide est spécifiée
 for arg in "$@"; do
     if [ "$arg" == "-h" ] || [ "$arg" == "-H" ]; then
-        echo "Afficher l'aide..."
+        echo -e "Voici les options utilisable :\n-d1 les conducteurs avec le plus de trajets\n-d2 les conducteurs et leur plus grande distance parcourue\n-l les 10 trajets les plus longs\n-t les 10 villes les plus traversées\n-s statistiques sur les étapes\n"
         exit 0
     fi
 done
@@ -31,15 +53,14 @@ else
 fi
 
 
-#vérifie si le fichier data est vide et copie le fichier via le premier argument si oui
-if [ -z "$(ls -A data)" ]; then
+#copie le fichier data.csv depuis le chemin mis en argument
+if [ "$chemin" = "data/data.csv" ]; then
+	echo -e "data.csv est déja dans le dossier /data\n"
+else	 
 	echo -e "Copie du fichier data.csv dans le dossier data...\n"
 	# Récupère le premier argument séparément
 	first_arg=$1
 	cp "$first_arg" "data"
-
-else
-	echo -e "Le fichier data.csv est bien dans le dossier data\n"
 fi
 
 #vérifications pour les fichiers temp et images
@@ -87,11 +108,16 @@ clear
 
 #parcour les arguments et effctue les traitements
 for arg in "${@:2}"; do
+	if [[ "$arg" != "-d1" && "$arg" != "-D1" && "$arg" != "-d2" && "$arg" != "-D2" && "$arg" != "-l" && "$arg" != "-L" && "$arg" != "-t" && "$arg" != "-T" && "$arg" != "-s" && "$arg" != "-S" ]]; then
+        echo -e "Erreur : l'argument '$arg' n'est pas valide. Veuillez utiliser -d1 -D1 -d2 -D2 -l -L -t -T -s -S\n"
+        exit 1
+    fi
     echo -e "\nArgument: $arg"
 
     #traitement d1
     if [ "$arg" == "-d1" ] || [ "$arg" == "-D1" ]; then
-    
+    	
+    	
     	start_time=$(date +%s)
 	awk -F ';' '!seen[$6,$1]++ { count[$6]++ } END { for (name in count) print name ";" count[name] }' data/data.csv | sort -t ';' -k2,2nr | head -n 10 > temp/tempd1.txt
 	cat temp/tempd1.txt
@@ -265,40 +291,55 @@ EOF
     elif [ "$arg" == "-t" ] || [ "$arg" == "-T" ]; then
      	
      	if [ -e "progc/progt" ]; then
-       		echo -e "l'exécutable C est déja existant\n"
+       		echo -e "L'exécutable C du traitement t est déja existant\n"
         else
-       		echo -e "Pas d'exécutable C\n"
+       		echo -e "Pas de premier exécutable C\n"
        		echo -e "compilation...\n"
        		cd progc
             	make progt
             	cd ..
-       fi
-     	
-     	start_time=$(date +%s)
-	awk -F';'
- 	'BEGIN { OFS=";"; } { count[$4] += 1; if ($2 == 1) { departure_city[$3] += 1; count[$3] += 1; } } END { for (city in count) print city, count[city] ";" departure_city[city] }' "$input_file" >> temp/firsttemp.csv
+        fi
+        
+        start_time=$(date +%s)
 
-
-        gcc -o progc/progt progc/programme_t.c
-        ./progc/progt temp/firsttemp.csv
-            
-        head -n 10 temp/secondtemp.csv >> temp/thirdtemp.csv
-
-        gcc -o progc/progt2 progc/programme_t2.c
-        ./progc/progt2 temp/thirdtemp.csv
-
-        cat temp/finaltemp.csv
+        ./progc/progt data/data.csv > temp/finaltemp_t.csv
+        cat temp/finaltemp_t.csv
+           
         end_time=$(date +%s)
-	elapsed_time=$(echo "$end_time - $start_time" | bc)
-	echo "Temps écoulé : $elapsed_time secondes"
-	
-        rm temp/firsttemp.csv temp/thirdtemp.csv temp/secondtemp.csv temp/finaltemp.csv
+elapsed_time=$(echo "$end_time - $start_time" | bc)
+echo "Temps écoulé : $elapsed_time secondes"
+gnuplot << EOF
+set term pngcairo enhanced size 1200,1000
+set output "images/Traitement_t.png"
+set encoding utf8
+set margins 10, 10, 7, 5
+set yrange [-10:3500]
+set ytics 1000
+
+set style data histogram
+set style histogram cluster gap 4
+set style fill transparent solid 1
+set boxwidth 3
+set grid ytics
+set xtics rotate by 45 center font ",12" right
+set title "Option -t : Nb routes = f(Towns)" font ",20"
+set ylabel "NB ROUTES" font ",15"
+set xlabel "TOWN NAMES" font ",15" offset 0,-1
+set datafile separator ";"
+plot "temp/finaltemp_t.csv" using 2:xtic(1) lc "#00ffff" t "Total routes" , '' using 3 lc "#000fff" t "First town"
+
+set output
+EOF
+xdg-open "images/Traitement_t.png"
+	cd progc
+        make clean
+        cd ..
 
     #traitement s
     elif [ "$arg" == "-s" ] || [ "$arg" == "-S" ]; then
        
        if [ -e "progc/progs" ]; then
-       		echo -e "l'exécutable C est déja existant\n"
+       		echo -e "L'exécutable C du traitement s est déja existant\n"
        else
        		echo -e "Pas d'exécutable C\n"
        		echo -e "compilation...\n"
@@ -322,7 +363,24 @@ EOF
        end_time=$(date +%s)
        elapsed_time=$(echo "$end_time - $start_time" | bc)
        echo "Temps écoulé : $elapsed_time secondes"
-            
+       
+       gnuplot << EOF
+set terminal png font "arial,10"
+  set output "images/s.png"
+  set title "Option -s"
+  set style data lines
+  set style fill solid 0.5
+  set datafile separator ";"
+  set xrange [1:*]
+  set xtic rotate by 45 right
+  set xlabel "ID"
+  set ylabel "Distance" rotate by -270
+  set title "Option -s "
+  plot "temp/finaltemp.csv" using 0:2:3:xtic(2) with filledcurves below title "Distance Min/Max" lc rgb "blue", '' u 0:4 lc rgb "blue" title "Distance Moy"
+EOF
+
+    xdg-open "images/s.png"
+       
        cd progc
        make clean
        cd ..
