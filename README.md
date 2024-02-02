@@ -8,24 +8,23 @@ Ce script Bash est conçu pour effectuer divers traitements sur des données pro
 Avant d'exécuter le script, assurez-vous que votre système remplit les conditions suivantes :
 
 - Bash est installé.
+- gcc est installé
+- make est installé
 - Gnuplot est installé pour générer des graphiques.
 - Le dossier 'data' existe et contient le fichier CSV d'entrée ('data.csv').
 - Les dossiers 'images', 'temp', 'demo' et 'progc' existent ou seront créés par le script.
 
 ## Utilisation
 
-Pour exécuter le script, utilisez la commande suivante :
+Pour exécuter le script, utilisez les commande suivante :
 
-```bash
-./script.sh [OPTIONS] data.csv
+chmod 700 script.sh
+./script.sh  /chemin/du/fichier/data.csv [OPTIONS]
 
 ## Options disponibles
--h ou -H: Affiche l'aide et la documentation.
+-h ou -H: Affiche l'aide et les options utilisables
 -d1 ou -D1: Effectue le traitement 1 et génère une visualisation.
 -d2 ou -D2: Effectue le traitement 2 et génère une visualisation.
 -l ou -L: Effectue le traitement "l" et génère une visualisation.
 -t ou -T: Compile et exécute le programme C "progt".
 -s ou -S: Compile et exécute le programme C "progs", avec des traitements spécifiques.
-Note : Assurez-vous de remplacer data.csv par le chemin vers votre fichier de données CSV.
-
-Remarque : Assurez-vous que les permissions d'exécution sont attribuées au script via la commande chmod +x script.sh avant de l'exécuter.
