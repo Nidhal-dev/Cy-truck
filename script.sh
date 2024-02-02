@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#donne les droits aux programme C
+cd progc
+chmod 700 programme_s
+chmod 700 programme_t
+cd ..
+
 # Vérifiez s'il y a au moins un argument
 if [ $# -eq 0 ]; then
     echo -e "Aucun arguments\n"
