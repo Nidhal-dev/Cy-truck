@@ -10,9 +10,12 @@ Avant d'exécuter le script, assurez-vous que votre système remplit les conditi
 - Bash est installé.
 - gcc est installé
 - make est installé
+- awk est installe
 - Gnuplot est installé pour générer des graphiques.
 - Le dossier 'data' existe et contient le fichier CSV d'entrée ('data.csv').
 - Les dossiers 'images', 'temp', 'demo' et 'progc' existent ou seront créés par le script.
+  
+NOTE : utiliser la commande sudo apt-get install [package désiré] pour installer un package
 
 ## Utilisation
 
