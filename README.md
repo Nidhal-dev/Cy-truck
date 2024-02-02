@@ -20,7 +20,7 @@ Pour exécuter le script, utilisez les commande suivante :
 
 chmod 700 script.sh
 ./script.sh  /chemin/du/fichier/data.csv [OPTIONS]
-
+```bash
 ## Options disponibles
 -h ou -H: Affiche l'aide et les options utilisables
 -d1 ou -D1: Effectue le traitement 1 et génère une visualisation.
