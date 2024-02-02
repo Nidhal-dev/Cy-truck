@@ -36,8 +36,8 @@ chmod 700 script.sh
 ```bash
 ## Options disponibles
 -h ou -H: Affiche les options utilisables
--d1 ou -D1: Effectue le traitement 1 et génère une visualisation.
--d2 ou -D2: Effectue le traitement 2 et génère une visualisation.
--l ou -L: Effectue le traitement "l" et génère une visualisation.
--t ou -T: Compile et exécute le programme C "progt".
--s ou -S: Compile et exécute le programme C "progs", avec des traitements spécifiques.
+-d1 ou -D1: Les conducteurs avec le plus de trajets
+-d2 ou -D2:  Les conducteurs avec leur plus grande distance parcouru
+-l ou -L:  Les 10 trajets les plus longs
+-t ou -T:  Les 10 villes les plus traversées
+-s ou -S: Statistiques sur les étapes
