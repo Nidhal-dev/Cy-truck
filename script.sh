@@ -2,8 +2,8 @@
 
 #donne les droits aux programme C
 cd progc
-chmod 700 programme_s
-chmod 700 programme_t
+chmod 700 programme_s.c
+chmod 700 programme_t.c
 cd ..
 
 # Vérifiez s'il y a au moins un argument
