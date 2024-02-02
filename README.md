@@ -8,6 +8,9 @@ Ce code permet d'effectuer divers traitements sur des données provenant d'un fi
 
 Avant d'exécuter le script, assurez-vous que votre système remplit les conditions suivantes :
 
+- télécharger le fichier zip du code :
+  Cliquez sur le bouton code et télécharger zip
+
 - Bash est installé :
   sudo apt-get -y install bash
   
