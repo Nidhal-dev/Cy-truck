@@ -394,5 +394,3 @@ EOF
     fi
 done
 
-#"$(realpath data/data.csv)"
-
